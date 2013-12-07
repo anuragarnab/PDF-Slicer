@@ -328,6 +328,9 @@ namespace Merge
             setRange(textStart, 0);            
         }
 
+        /// <summary> 
+        /// Performs input validation on the numbers entered into the slicing text boxes
+        /// </summary>
         // option = 0 is start
         // option = 1 is end
         private void setRange(TextBox textBox, int option)
@@ -375,7 +378,51 @@ namespace Merge
         {
             setRange(textEnd, 1);      
         }
+
+        private void addPages(string target)
+        {
+            File file = new File();
+
+            int targetPageIndex = 0; // Where in the pdf to add to
+
+            for (int i = 0; i < inputFiles.Count; ++i)
+            {
+                using (File sourceFile = new File(((InputFile)inputFileObjects[i]).Path))
+                {
+                    Pages sourcePages = sourceFile.Document.Pages;
+
+                    new PageManager(file.Document).Add(
+                    targetPageIndex,
+                    sourcePages.GetSlice(
+                    ((InputFile)inputFileObjects[i]).Start - 1,
+                    ((InputFile)inputFileObjects[i]).End 
+                  )
+                );
+                }
+            }
+
+            Serialize(file, target, null, "title", "subject", "keywords");
+        }
+
+        private void buttonSlice_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.FileName = null;
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName == null || saveFileDialog1.Equals(""))
+            {
+                writeText("Valid output file name required");
+            }
+            addPages(saveFileDialog1.FileName);
+        }
+
+        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
         
+
+
     }
 }
 

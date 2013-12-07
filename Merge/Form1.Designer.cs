@@ -43,6 +43,7 @@
             this.browse = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.buttonSlice = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,6 +59,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.buttonSlice);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMerge);
             this.splitContainer1.Panel1.Controls.Add(this.buttonDel);
             this.splitContainer1.Panel1.Controls.Add(this.buttonDown);
@@ -130,6 +132,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(723, 251);
             this.listBox1.TabIndex = 1;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged_1);
             // 
             // textEnd
             // 
@@ -205,6 +208,17 @@
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
+            // buttonSlice
+            // 
+            this.buttonSlice.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonSlice.Location = new System.Drawing.Point(300, 0);
+            this.buttonSlice.Name = "buttonSlice";
+            this.buttonSlice.Size = new System.Drawing.Size(75, 27);
+            this.buttonSlice.TabIndex = 6;
+            this.buttonSlice.Text = "Slice";
+            this.buttonSlice.UseVisualStyleBackColor = true;
+            this.buttonSlice.Click += new System.EventHandler(this.buttonSlice_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -239,6 +253,7 @@
         private System.Windows.Forms.TextBox textStart;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonSlice;
     }
 }
 
