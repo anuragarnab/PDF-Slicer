@@ -32,6 +32,7 @@ namespace Merge
     {
 
         ArrayList inputFiles = new ArrayList();
+        ArrayList inputFileObjects = new ArrayList();
 
         bool dontUpdate = false;
 
@@ -58,12 +59,14 @@ namespace Merge
 
             String[] files = openFileDialog1.FileNames;
 
-            String list = "";
-
             foreach (String name in files)
             {
-                list = list + name + " ";
                 inputFiles.Add(name);
+
+                using (File mainFile = new File(name) )
+                {
+                    inputFileObjects.Add(new InputFile(name, mainFile.Document.Pages.Count));
+                }
             }
 
             refreshList();
@@ -109,6 +112,14 @@ namespace Merge
 
                         label1.Text = ((string)inputFiles[listBox1.SelectedIndex]).Substring(startIndex) + "("+mainFile.Document.Pages.Count+")";
                     }
+
+                    textStart.TextChanged -= textStart_TextChanged;
+                    textEnd.TextChanged -= textEnd_TextChanged;
+                    textStart.Text = "" + ((InputFile)inputFileObjects[listBox1.SelectedIndex]).Start;
+                    textEnd.Text = "" + ((InputFile)inputFileObjects[listBox1.SelectedIndex]).End;
+                    textStart.TextChanged += textStart_TextChanged;
+                    textEnd.TextChanged += textEnd_TextChanged;
+
                 }
 
             }
@@ -130,6 +141,11 @@ namespace Merge
                 if (file.EndsWith(".pdf"))
                 {
                     inputFiles.Add(file);
+
+                    using (File mainFile = new File(file))
+                    {
+                        inputFileObjects.Add(new InputFile(file, mainFile.Document.Pages.Count));
+                    }
                 }
             }
             refreshList();
@@ -139,12 +155,14 @@ namespace Merge
         private void buttonUp_Click(object sender, EventArgs e)
         {
             swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFiles);
+            swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFileObjects);
         }
 
         private void buttonDown_Click(object sender, EventArgs e)
         {
             if (swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFiles))
             {
+                swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFileObjects);
                 listBox1.SelectedIndex += 1;
             }
         }
@@ -171,6 +189,13 @@ namespace Merge
 
         private void merge(string target)
         {
+
+            if (target == null || target.Equals(""))
+            {
+                writeText("No output given");
+                return;
+            }
+
             if (inputFiles.Count > 1)
             {
                 writeText("Working");
@@ -206,6 +231,7 @@ namespace Merge
 
         private void buttonMerge_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.FileName = null;
             saveFileDialog1.ShowDialog();
             merge(saveFileDialog1.FileName);
         }
@@ -299,10 +325,12 @@ namespace Merge
 
         private void textStart_TextChanged(object sender, EventArgs e)
         {
-            setRange(textStart, start);            
+            setRange(textStart, 0);            
         }
 
-        private void setRange(TextBox textBox, ArrayList array)
+        // option = 0 is start
+        // option = 1 is end
+        private void setRange(TextBox textBox, int option)
         {
             try
             {
@@ -310,29 +338,42 @@ namespace Merge
 
                 if (listBox1.SelectedIndex >= 0)
                 {
-                    using (File mainFile = new File((string)inputFiles[listBox1.SelectedIndex]))
-                    {
                         // pdf numbering starts at 1!
-                        if (number > mainFile.Document.Pages.Count || number < 1)
+                        if (number > ((InputFile)inputFileObjects[listBox1.SelectedIndex]).Length || number < 1)
                         {
                             throw new Exception();
                         }
                         else
                         {
-                            array[listBox1.SelectedIndex] = number;
+                            if (option == 0)
+                            {
+                                ((InputFile)inputFileObjects[listBox1.SelectedIndex]).Start = number;
+                            }
+                            else
+                            {
+                                ((InputFile)inputFileObjects[listBox1.SelectedIndex]).End = number;
+                            }
                         }
-                    }
+
                 }
             }
             catch (Exception exception)
             {
                 writeWarningText("Invalid input");
+                if (option == 0)
+                {
+                    ((InputFile)inputFileObjects[listBox1.SelectedIndex]).Start = 1;
+                }
+                else
+                {
+                    ((InputFile)inputFileObjects[listBox1.SelectedIndex]).End = ((InputFile)inputFileObjects[listBox1.SelectedIndex]).Length;
+                }
             }
         }
 
         private void textEnd_TextChanged(object sender, EventArgs e)
         {
-            setRange(textEnd, end);      
+            setRange(textEnd, 1);      
         }
         
     }

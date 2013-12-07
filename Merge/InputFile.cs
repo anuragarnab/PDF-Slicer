@@ -8,10 +8,10 @@ namespace Merge
 {
     class InputFile
     {
-        string path;
-        int start;
-        int end;
-        int length;
+        private string path;
+        private int start;
+        private int end;
+        private int length;
 
         public InputFile(string path, int start, int end, int length)
         {
@@ -27,8 +27,13 @@ namespace Merge
         }
 
         public InputFile(string path, int length) :
-            this(path, 0, 0, length)
+            this(path, 1, length, length)
         {
+        }
+
+        public string ToString ()
+        {
+            return path;
         }
 
         public string Path
