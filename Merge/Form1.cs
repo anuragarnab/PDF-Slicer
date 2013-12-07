@@ -32,8 +32,6 @@ namespace Merge
     {
 
         ArrayList inputFiles = new ArrayList();
-        ArrayList start = new ArrayList();
-        ArrayList end = new ArrayList();
 
         bool dontUpdate = false;
 

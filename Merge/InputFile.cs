@@ -13,6 +13,24 @@ namespace Merge
         int end;
         int length;
 
+        public InputFile(string path, int start, int end, int length)
+        {
+            this.start = start;
+            this.end = end;
+            this.length = length;
+            this.path = path;
+        }
+
+        public InputFile(string path):
+            this(path, 0, 0, 0)
+        {
+        }
+
+        public InputFile(string path, int length) :
+            this(path, 0, 0, length)
+        {
+        }
+
         public string Path
         {
             set
