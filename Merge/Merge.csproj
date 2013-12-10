@@ -38,8 +38,13 @@
     <Reference Include="PdfSharp-WPF">
       <HintPath>..\..\PDF sharp\WPF\PdfSharp-WPF.dll</HintPath>
     </Reference>
+    <Reference Include="PdfSharp.Xps">
+      <HintPath>..\..\pdf to xps\PdfSharp.Xps.dll</HintPath>
+    </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="gxps.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

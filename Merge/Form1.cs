@@ -25,12 +25,16 @@ using System.Diagnostics;
 using System.Collections;
 using org.pdfclown.documents.interaction.viewer;
 using org.pdfclown.documents.interchange.metadata;
+using System.Printing;
+
+
+//using System.IO;
 
 namespace Merge
 {
     public partial class Form1 : Form
     {
-
+     
         ArrayList inputFiles = new ArrayList();
         ArrayList inputFileObjects = new ArrayList();
 
@@ -49,36 +53,6 @@ namespace Merge
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // Don't want selected item handler to trigger now
-            listBox1.SelectedIndexChanged -= listBox1_SelectedIndexChanged;
-            dontUpdate = true;
-
-            openFileDialog1.ShowDialog();
-
-            String[] files = openFileDialog1.FileNames;
-
-            foreach (String name in files)
-            {
-                inputFiles.Add(name);
-
-                using (File mainFile = new File(name) )
-                {
-                    inputFileObjects.Add(new InputFile(name, mainFile.Document.Pages.Count));
-                }
-            }
-
-            refreshList();
-
-            //           textBox1.ReadOnly = false;
-            //           textBox1.Text = list;
-            //           textBox1.ReadOnly = true;
-
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
-            dontUpdate = false;
-        }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -92,12 +66,10 @@ namespace Merge
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+            writeText("Drag files or use the \"add\" button");
+
             if (!dontUpdate)
             {
-                textBox1.ReadOnly = false;
-                textBox1.Text = "" + listBox1.SelectedIndex;
-                textBox1.ReadOnly = true;
-
                 int startIndex = 0;
 
                 if (listBox1.SelectedIndex >= 0)
@@ -152,21 +124,6 @@ namespace Merge
 
         }
 
-        private void buttonUp_Click(object sender, EventArgs e)
-        {
-            swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFiles);
-            swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFileObjects);
-        }
-
-        private void buttonDown_Click(object sender, EventArgs e)
-        {
-            if (swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFiles))
-            {
-                swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFileObjects);
-                listBox1.SelectedIndex += 1;
-            }
-        }
-
         private bool swap(int index1, int index2, ArrayList array)
         {
             if (index1 >= 0 && index2 >= 0 && index1 < array.Count && index2 < array.Count)
@@ -199,8 +156,12 @@ namespace Merge
             if (inputFiles.Count > 1)
             {
                 writeText("Working");
+
+                label.Visible = false;
                 progressBar1.Visible = true;
                 progressBar1.Step = 100 / inputFiles.Count;
+                
+
                 using (File mainFile = new File((string)inputFiles[0]))
                 {
                     Document doc = mainFile.Document;
@@ -215,6 +176,7 @@ namespace Merge
                         }
                     }
 
+                    // Last three parameters are "title", "subject" and "keyword"
                     Serialize(mainFile, target, null, "title", "subject", "keywords");
                 }
             }
@@ -229,12 +191,6 @@ namespace Merge
         {
         }
 
-        private void buttonMerge_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.FileName = null;
-            saveFileDialog1.ShowDialog();
-            merge(saveFileDialog1.FileName);
-        }
 
         private string Serialize(File file, string fileName, SerializationModeEnum? serializationMode, string title, string subject, string keywords)
         {
@@ -256,6 +212,8 @@ namespace Merge
                 file.Save(outputFilePath, serializationMode.Value);
                 writeText("Complete");
                 Process.Start(outputFilePath);
+
+                label.Visible = true;
                 progressBar1.Visible = false;
             }
             catch (Exception e)
@@ -292,30 +250,18 @@ namespace Merge
             info.Keywords = keywords;
         }
 
-        private void buttonDel_Click(object sender, EventArgs e)
-        {
-            if (listBox1.SelectedIndex >= 0)
-            {
-                inputFiles.RemoveAt(listBox1.SelectedIndex);
-                refreshList();
-            }
-        }
-
         private void writeText(string text)
         {
-            textBox1.ForeColor = System.Drawing.Color.Black;
-            textBox1.ReadOnly = false;
-            textBox1.Text = text;
-            textBox1.ReadOnly = true;
+
+            label.ForeColor = System.Drawing.Color.Black;
+            label.Text = text;
+ 
         }
 
         private void writeWarningText(string text)
         {
-            textBox1.ForeColor = System.Drawing.Color.Crimson;
-            textBox1.ReadOnly = false;
-            textBox1.Text = text;
-            //textBox1.ForeColor = System.Drawing.Color.Black;
-            textBox1.ReadOnly = true;
+            label.ForeColor = System.Drawing.Color.Crimson;
+            label.Text = text;
         }
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -357,7 +303,7 @@ namespace Merge
                                 ((InputFile)inputFileObjects[listBox1.SelectedIndex]).End = number;
                             }
                         }
-
+                        writeText("");
                 }
             }
             catch (Exception exception)
@@ -385,19 +331,27 @@ namespace Merge
 
             int targetPageIndex = 0; // Where in the pdf to add to
 
-            for (int i = 0; i < inputFiles.Count; ++i)
+            for (int i = inputFileObjects.Count - 1; i >= 0; --i)
             {
                 using (File sourceFile = new File(((InputFile)inputFileObjects[i]).Path))
                 {
                     Pages sourcePages = sourceFile.Document.Pages;
 
-                    new PageManager(file.Document).Add(
-                    targetPageIndex,
-                    sourcePages.GetSlice(
-                    ((InputFile)inputFileObjects[i]).Start - 1,
-                    ((InputFile)inputFileObjects[i]).End 
-                  )
-                );
+                    if (((InputFile)inputFileObjects[i]).Start <= ((InputFile)inputFileObjects[i]).End)
+                    {
+                        new PageManager(file.Document).Add(
+                        targetPageIndex,
+                        sourcePages.GetSlice(
+                        ((InputFile)inputFileObjects[i]).Start - 1,
+                        ((InputFile)inputFileObjects[i]).End
+                      )
+
+                    );
+                    }
+                    else
+                    {
+                        writeWarningText("End page precedes start page in " + ((InputFile)inputFileObjects[i]).Path );
+                    }
                 }
             }
 
@@ -418,9 +372,98 @@ namespace Merge
 
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            
+        }
+
+        private void b_Add_Click(object sender, EventArgs e)
+        {
+            listBox1.SelectedIndexChanged -= listBox1_SelectedIndexChanged;
+            dontUpdate = true;
+
+            openFileDialog1.Filter = "PDF files |*.pdf|All files|*.*";
+            openFileDialog1.ShowDialog();
+
+            String[] files = openFileDialog1.FileNames;
+
+            foreach (String name in files)
+            {
+                inputFiles.Add(name);
+
+                using (File mainFile = new File(name))
+                {
+                    inputFileObjects.Add(new InputFile(name, mainFile.Document.Pages.Count));
+                }
+            }
+
+            refreshList();
+
+            //           textBox1.ReadOnly = false;
+            //           textBox1.Text = list;
+            //           textBox1.ReadOnly = true;
+
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            dontUpdate = false;
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
 
         }
-        
+
+        private void b_Up_Click(object sender, EventArgs e)
+        {
+            swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFiles);
+            swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFileObjects);
+        }
+
+        private void b_Down_Click(object sender, EventArgs e)
+        {
+            if (swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFiles))
+            {
+                swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFileObjects);
+                listBox1.SelectedIndex += 1;
+            }
+        }
+
+        private void b_Delete_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex >= 0)
+            {
+                inputFiles.RemoveAt(listBox1.SelectedIndex);
+                refreshList();
+            }
+        }
+
+        private void b_Merge_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.FileName = null;
+            saveFileDialog1.ShowDialog();
+            merge(saveFileDialog1.FileName);
+        }
+
+        private void b_Slice_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.FileName = null;
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName == null || saveFileDialog1.Equals(""))
+            {
+                writeText("Valid output file name required");
+            }
+            addPages(saveFileDialog1.FileName);
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+  
 
 
     }
