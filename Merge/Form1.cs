@@ -149,7 +149,7 @@ namespace Merge
 
             if (target == null || target.Equals(""))
             {
-                writeText("No output given");
+               // writeText("No output given");
                 return;
             }
 
@@ -177,7 +177,7 @@ namespace Merge
                     }
 
                     // Last three parameters are "title", "subject" and "keyword"
-                    Serialize(mainFile, target, null, "title", "subject", "keywords");
+                    Serialize(mainFile, target, null, getTitle(target), "subject", "keywords");
                 }
             }
             else
@@ -329,6 +329,10 @@ namespace Merge
         {
             File file = new File();
 
+            label.Visible = false;
+            progressBar1.Step = 100 / inputFiles.Count;
+            progressBar1.Visible = true;
+
             int targetPageIndex = 0; // Where in the pdf to add to
 
             for (int i = inputFileObjects.Count - 1; i >= 0; --i)
@@ -352,10 +356,12 @@ namespace Merge
                     {
                         writeWarningText("End page precedes start page in " + ((InputFile)inputFileObjects[i]).Path );
                     }
+
+                    progressBar1.PerformStep();
                 }
             }
 
-            Serialize(file, target, null, "title", "subject", "keywords");
+            Serialize(file, target, null, getTitle(target), "subject", "keywords");
         }
 
         private void buttonSlice_Click(object sender, EventArgs e)
@@ -438,6 +444,7 @@ namespace Merge
         {
             saveFileDialog1.FileName = null;
             saveFileDialog1.ShowDialog();
+            saveFileDialog1.AddExtension = false;
             merge(saveFileDialog1.FileName);
         }
 
@@ -446,12 +453,14 @@ namespace Merge
             saveFileDialog1.FileName = null;
             saveFileDialog1.ShowDialog();
 
-            if (saveFileDialog1.FileName == null || saveFileDialog1.Equals(""))
+            if (saveFileDialog1.FileName == null || saveFileDialog1.FileName.Equals(""))
             {
-                writeText("Valid output file name required");
+                ;//writeText("Valid output file name required");
             }
-            addPages(saveFileDialog1.FileName);
-
+            else
+            {
+                addPages(saveFileDialog1.FileName);
+            }
         }
 
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -462,6 +471,19 @@ namespace Merge
         private void toolStripProgressBar1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private string getTitle(string path)
+        {
+            int startIndex = 0;
+
+            if (path.LastIndexOf("\\") > 0)
+            {
+                startIndex = path.LastIndexOf("\\") + 1;
+            }
+
+            string subject = path.Substring(startIndex);
+            return subject.Replace(".pdf", "");
         }
   
 

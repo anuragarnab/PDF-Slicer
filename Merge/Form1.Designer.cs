@@ -60,7 +60,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(3, 28);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(366, 284);
+            this.listBox1.Size = new System.Drawing.Size(367, 284);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged_1);
             // 
@@ -77,7 +77,7 @@
             this.b_Slice});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(372, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(373, 25);
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
@@ -153,7 +153,7 @@
             // textStart
             // 
             this.textStart.Dock = System.Windows.Forms.DockStyle.Right;
-            this.textStart.Location = new System.Drawing.Point(234, 0);
+            this.textStart.Location = new System.Drawing.Point(235, 0);
             this.textStart.Name = "textStart";
             this.textStart.Size = new System.Drawing.Size(60, 20);
             this.textStart.TabIndex = 7;
@@ -163,7 +163,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.label2.Location = new System.Drawing.Point(294, 0);
+            this.label2.Location = new System.Drawing.Point(295, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 13);
             this.label2.TabIndex = 6;
@@ -172,7 +172,7 @@
             // textEnd
             // 
             this.textEnd.Dock = System.Windows.Forms.DockStyle.Right;
-            this.textEnd.Location = new System.Drawing.Point(310, 0);
+            this.textEnd.Location = new System.Drawing.Point(311, 0);
             this.textEnd.Name = "textEnd";
             this.textEnd.Size = new System.Drawing.Size(56, 20);
             this.textEnd.TabIndex = 8;
@@ -197,7 +197,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 318);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(366, 25);
+            this.panel1.Size = new System.Drawing.Size(367, 25);
             this.panel1.TabIndex = 8;
             // 
             // flowLayoutPanel1
@@ -226,7 +226,7 @@
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.Location = new System.Drawing.Point(375, 3);
+            this.progressBar1.Location = new System.Drawing.Point(376, 3);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(0, 23);
             this.progressBar1.TabIndex = 11;
