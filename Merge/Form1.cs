@@ -35,6 +35,8 @@ namespace Merge
     public partial class Form1 : Form
     {
      
+        const string MESSAGE = "Drag files into the box above or use the \"add\" button on the toolbar";
+
         ArrayList inputFiles = new ArrayList();
         ArrayList inputFileObjects = new ArrayList();
 
@@ -66,7 +68,7 @@ namespace Merge
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            writeText("Drag files or use the \"add\" button");
+            writeText(MESSAGE);
 
             if (!dontUpdate)
             {
@@ -99,7 +101,6 @@ namespace Merge
 
 
         //Event handlers for drag and drop into the ListBox          
-
         void DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
@@ -177,7 +178,7 @@ namespace Merge
                     }
 
                     // Last three parameters are "title", "subject" and "keyword"
-                    Serialize(mainFile, target, null, getTitle(target), "subject", "keywords");
+                    Serialize(mainFile, target, null, getTitle(target), "subject", "PDF Slicer");
                 }
             }
             else
@@ -204,9 +205,6 @@ namespace Merge
             string outputFilePath = fileName + ".pdf";
 
             // Save the file!
-            /*
-              NOTE: You can also save to a generic target stream (see Save() method overloads).
-            */
             try
             { 
                 file.Save(outputFilePath, serializationMode.Value);
@@ -220,10 +218,7 @@ namespace Merge
             {
 
                 writeWarningText("File writing failed");
-                //Console.WriteLine("File writing failed: " + e.Message);
-                //Console.WriteLine(e.StackTrace);
             }
-            // Console.WriteLine("\nOutput: " + outputFilePath);
 
             return outputFilePath;
         }
@@ -277,8 +272,8 @@ namespace Merge
         /// <summary> 
         /// Performs input validation on the numbers entered into the slicing text boxes
         /// </summary>
-        // option = 0 is start
-        // option = 1 is end
+        // option = 0 is start text box
+        // option = 1 is end text box
         private void setRange(TextBox textBox, int option)
         {
             try
@@ -361,7 +356,7 @@ namespace Merge
                 }
             }
 
-            Serialize(file, target, null, getTitle(target), "subject", "keywords");
+            Serialize(file, target, null, getTitle(target), "subject", "PDF Slicer");
         }
 
         private void buttonSlice_Click(object sender, EventArgs e)
@@ -484,10 +479,8 @@ namespace Merge
 
             string subject = path.Substring(startIndex);
             return subject.Replace(".pdf", "");
+         
         }
-  
-
-
     }
 }
 

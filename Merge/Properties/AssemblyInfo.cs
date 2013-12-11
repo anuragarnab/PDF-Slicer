@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Merge")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("PDF Slicer")]
+[assembly: AssemblyDescription("A utility to merge multiple PDF documents together or to slice certain ranges of PDFs")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Merge")]
+[assembly: AssemblyCompany("hmph")]
+[assembly: AssemblyProduct("PDF Slicer")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
