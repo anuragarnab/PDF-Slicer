@@ -33,7 +33,13 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.b_Add = new System.Windows.Forms.ToolStripButton();
+            this.b_Up = new System.Windows.Forms.ToolStripButton();
+            this.b_Down = new System.Windows.Forms.ToolStripButton();
+            this.b_Delete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.b_Merge = new System.Windows.Forms.ToolStripButton();
+            this.b_Slice = new System.Windows.Forms.ToolStripButton();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,12 +48,6 @@
             this.textEnd = new System.Windows.Forms.TextBox();
             this.label = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.b_Add = new System.Windows.Forms.ToolStripButton();
-            this.b_Up = new System.Windows.Forms.ToolStripButton();
-            this.b_Down = new System.Windows.Forms.ToolStripButton();
-            this.b_Delete = new System.Windows.Forms.ToolStripButton();
-            this.b_Merge = new System.Windows.Forms.ToolStripButton();
-            this.b_Slice = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -104,10 +104,68 @@
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
             // 
+            // b_Add
+            // 
+            this.b_Add.Image = global::Merge.Properties.Resources.add;
+            this.b_Add.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Add.Name = "b_Add";
+            this.b_Add.Size = new System.Drawing.Size(82, 22);
+            this.b_Add.Text = "Add File ...";
+            this.b_Add.Click += new System.EventHandler(this.b_Add_Click);
+            // 
+            // b_Up
+            // 
+            this.b_Up.Image = global::Merge.Properties.Resources.up;
+            this.b_Up.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Up.Name = "b_Up";
+            this.b_Up.Size = new System.Drawing.Size(42, 22);
+            this.b_Up.Text = "Up";
+            this.b_Up.Click += new System.EventHandler(this.b_Up_Click);
+            // 
+            // b_Down
+            // 
+            this.b_Down.Image = global::Merge.Properties.Resources.down;
+            this.b_Down.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Down.Name = "b_Down";
+            this.b_Down.Size = new System.Drawing.Size(58, 22);
+            this.b_Down.Text = "Down";
+            this.b_Down.Click += new System.EventHandler(this.b_Down_Click);
+            // 
+            // b_Delete
+            // 
+            this.b_Delete.Image = global::Merge.Properties.Resources.close;
+            this.b_Delete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Delete.Name = "b_Delete";
+            this.b_Delete.Size = new System.Drawing.Size(60, 22);
+            this.b_Delete.Text = "Delete";
+            this.b_Delete.Click += new System.EventHandler(this.b_Delete_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // b_Merge
+            // 
+            this.b_Merge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.b_Merge.Image = ((System.Drawing.Image)(resources.GetObject("b_Merge.Image")));
+            this.b_Merge.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Merge.Name = "b_Merge";
+            this.b_Merge.Size = new System.Drawing.Size(45, 22);
+            this.b_Merge.Text = "Merge";
+            this.b_Merge.ToolTipText = "Merge: Concatenate all the selected pdf files";
+            this.b_Merge.Click += new System.EventHandler(this.b_Merge_Click);
+            // 
+            // b_Slice
+            // 
+            this.b_Slice.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.b_Slice.Image = ((System.Drawing.Image)(resources.GetObject("b_Slice.Image")));
+            this.b_Slice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.b_Slice.Name = "b_Slice";
+            this.b_Slice.Size = new System.Drawing.Size(35, 22);
+            this.b_Slice.Text = "Slice";
+            this.b_Slice.ToolTipText = "Slice: Concatenate only the specified parts of the pdf files";
+            this.b_Slice.Click += new System.EventHandler(this.b_Slice_Click);
             // 
             // listBox1
             // 
@@ -187,70 +245,13 @@
             this.progressBar1.TabIndex = 11;
             this.progressBar1.Visible = false;
             // 
-            // b_Add
-            // 
-            this.b_Add.Image = global::Merge.Properties.Resources.add;
-            this.b_Add.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Add.Name = "b_Add";
-            this.b_Add.Size = new System.Drawing.Size(82, 22);
-            this.b_Add.Text = "Add File ...";
-            this.b_Add.Click += new System.EventHandler(this.b_Add_Click);
-            // 
-            // b_Up
-            // 
-            this.b_Up.Image = global::Merge.Properties.Resources.up;
-            this.b_Up.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Up.Name = "b_Up";
-            this.b_Up.Size = new System.Drawing.Size(42, 22);
-            this.b_Up.Text = "Up";
-            this.b_Up.Click += new System.EventHandler(this.b_Up_Click);
-            // 
-            // b_Down
-            // 
-            this.b_Down.Image = global::Merge.Properties.Resources.down;
-            this.b_Down.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Down.Name = "b_Down";
-            this.b_Down.Size = new System.Drawing.Size(58, 22);
-            this.b_Down.Text = "Down";
-            this.b_Down.Click += new System.EventHandler(this.b_Down_Click);
-            // 
-            // b_Delete
-            // 
-            this.b_Delete.Image = global::Merge.Properties.Resources.close;
-            this.b_Delete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Delete.Name = "b_Delete";
-            this.b_Delete.Size = new System.Drawing.Size(60, 22);
-            this.b_Delete.Text = "Delete";
-            this.b_Delete.Click += new System.EventHandler(this.b_Delete_Click);
-            // 
-            // b_Merge
-            // 
-            this.b_Merge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.b_Merge.Image = ((System.Drawing.Image)(resources.GetObject("b_Merge.Image")));
-            this.b_Merge.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Merge.Name = "b_Merge";
-            this.b_Merge.Size = new System.Drawing.Size(45, 22);
-            this.b_Merge.Text = "Merge";
-            this.b_Merge.ToolTipText = "Merge: Concatenate all the selected pdf files";
-            this.b_Merge.Click += new System.EventHandler(this.b_Merge_Click);
-            // 
-            // b_Slice
-            // 
-            this.b_Slice.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.b_Slice.Image = ((System.Drawing.Image)(resources.GetObject("b_Slice.Image")));
-            this.b_Slice.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.b_Slice.Name = "b_Slice";
-            this.b_Slice.Size = new System.Drawing.Size(35, 22);
-            this.b_Slice.Text = "Slice";
-            this.b_Slice.ToolTipText = "Slice: Concatenate only the specified parts of the pdf files";
-            this.b_Slice.Click += new System.EventHandler(this.b_Slice_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(373, 379);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(389, 414);
             this.Name = "Form1";

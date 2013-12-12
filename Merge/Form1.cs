@@ -1,4 +1,9 @@
-﻿using System;
+﻿/// Form1.cs
+/// The main window of the program
+/// Handles all user interaction
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,14 +18,6 @@ using org.pdfclown.files;
 using org.pdfclown.objects;
 using org.pdfclown.tools;
 
-using PdfSharp;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Drawing;
-
-
-// for outputting to debug window
-
 using System.Diagnostics;
 using System.Collections;
 using org.pdfclown.documents.interaction.viewer;
@@ -28,19 +25,19 @@ using org.pdfclown.documents.interchange.metadata;
 using System.Printing;
 
 
-//using System.IO;
-
 namespace Merge
 {
     public partial class Form1 : Form
     {
      
         const string MESSAGE = "Drag files into the box above or use the \"add\" button on the toolbar";
+        const string AUTHOR = "PDF Slicer";
 
+        // inputFiles is an array of just the names of the pdf files. 
+        // This is not the ideal solution, but when inputFileObjects is used as the data source of the grid view, 
+        // then the correct string is not shown. Hence, this stop-gap method was used
         ArrayList inputFiles = new ArrayList();
         ArrayList inputFileObjects = new ArrayList();
-
-        bool dontUpdate = false;
 
         public Form1()
         {
@@ -50,8 +47,6 @@ namespace Merge
             listBox1.DragEnter += new DragEventHandler(DragEnter);
             listBox1.DragDrop += new DragEventHandler(DragDrop);
             listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
-
-            //         listBox1.DataSource = inputFiles;
 
         }
 
@@ -65,13 +60,17 @@ namespace Merge
 
         }
 
+        /// <summary>
+        /// When the user changes the index on the grid view, the label and text boxes must be updated
+        /// to reflect the new slicing limits
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
             writeText(MESSAGE);
 
-            if (!dontUpdate)
-            {
                 int startIndex = 0;
 
                 if (listBox1.SelectedIndex >= 0)
@@ -96,16 +95,25 @@ namespace Merge
 
                 }
 
-            }
+            
         }
 
-
-        //Event handlers for drag and drop into the ListBox          
+       
+        /// <summary>
+        /// To allow dragging files into the listBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
         }
 
+        /// <summary>
+        /// Drops pdf files into the listBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -125,6 +133,15 @@ namespace Merge
 
         }
 
+        /// <summary>
+        /// Used to swap entries in the listBox
+        /// Used for the up and down arrows.
+        /// In this program, uses two consecutive indices, but will work nevertheless
+        /// </summary>
+        /// <param name="index1">First index to swap</param>
+        /// <param name="index2">Other index to swap</param>
+        /// <param name="array">The underlying array whose elements are being swapped</param>
+        /// <returns>true if a swap was succesful. False if the indices are invalid</returns>
         private bool swap(int index1, int index2, ArrayList array)
         {
             if (index1 >= 0 && index2 >= 0 && index1 < array.Count && index2 < array.Count)
@@ -139,18 +156,24 @@ namespace Merge
 
         }
 
+        /// <summary>
+        /// Need to do this for the listBox
+        /// </summary>
         private void refreshList()
         {
             listBox1.DataSource = null;
             listBox1.DataSource = inputFiles;
         }
 
+        /// <summary>
+        /// Merge's the pdf files in the listBox
+        /// </summary>
+        /// <param name="target">The output file</param>
         private void merge(string target)
         {
 
             if (target == null || target.Equals(""))
             {
-               // writeText("No output given");
                 return;
             }
 
@@ -158,7 +181,7 @@ namespace Merge
             {
                 writeText("Working");
 
-                label.Visible = false;
+                //label.Visible = false;
                 progressBar1.Visible = true;
                 progressBar1.Step = 100 / inputFiles.Count;
                 
@@ -192,7 +215,16 @@ namespace Merge
         {
         }
 
-
+        /// <summary>
+        /// To save the file as a pdf
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="fileName"></param>
+        /// <param name="serializationMode"></param>
+        /// <param name="title"></param>
+        /// <param name="subject"></param>
+        /// <param name="keywords"></param>
+        /// <returns></returns>
         private string Serialize(File file, string fileName, SerializationModeEnum? serializationMode, string title, string subject, string keywords)
         {
             ApplyDocumentSettings(file.Document, title, subject, keywords);
@@ -223,6 +255,13 @@ namespace Merge
             return outputFilePath;
         }
 
+        /// <summary>
+        /// Apply document properties like title etc
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="title"></param>
+        /// <param name="subject"></param>
+        /// <param name="keywords"></param>
         private void ApplyDocumentSettings(Document document, string title, string subject, string keywords
   )
         {
@@ -237,7 +276,7 @@ namespace Merge
             // Document metadata.
             Information info = document.Information;
             info.Clear();
-            info.Author = "author";
+            info.Author = AUTHOR;
             info.CreationDate = DateTime.Now;
             info.Creator = GetType().FullName;
             info.Title = title;
@@ -245,6 +284,10 @@ namespace Merge
             info.Keywords = keywords;
         }
 
+        /// <summary>
+        /// Write text to the bottom status label
+        /// </summary>
+        /// <param name="text"></param>
         private void writeText(string text)
         {
 
@@ -253,6 +296,10 @@ namespace Merge
  
         }
 
+        /// <summary>
+        /// Write status text in red
+        /// </summary>
+        /// <param name="text"></param>
         private void writeWarningText(string text)
         {
             label.ForeColor = System.Drawing.Color.Crimson;
@@ -264,16 +311,22 @@ namespace Merge
 
         }
 
+        /// <summary>
+        /// Fires when text in the text box changes. So that input validation can be performed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textStart_TextChanged(object sender, EventArgs e)
         {
             setRange(textStart, 0);            
         }
 
-        /// <summary> 
+        /// <summary>
         /// Performs input validation on the numbers entered into the slicing text boxes
+        /// Could have used an enum instead of int as an option
         /// </summary>
-        // option = 0 is start text box
-        // option = 1 is end text box
+        /// <param name="textBox"></param>
+        /// <param name="option">   option = 0 is start text box option = 1 is end text box</param>
         private void setRange(TextBox textBox, int option)
         {
             try
@@ -315,11 +368,21 @@ namespace Merge
             }
         }
 
+        
+        /// <summary>
+        /// Fires when text in the text box changes. So that input validation can be performed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textEnd_TextChanged(object sender, EventArgs e)
         {
             setRange(textEnd, 1);      
         }
 
+        /// <summary>
+        /// Selectively add pages of part of a pdf file
+        /// </summary>
+        /// <param name="target">The output file name</param>
         private void addPages(string target)
         {
             File file = new File();
@@ -359,27 +422,20 @@ namespace Merge
             Serialize(file, target, null, getTitle(target), "subject", "PDF Slicer");
         }
 
-        private void buttonSlice_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.FileName = null;
-            saveFileDialog1.ShowDialog();
-
-            if (saveFileDialog1.FileName == null || saveFileDialog1.Equals(""))
-            {
-                writeText("Valid output file name required");
-            }
-            addPages(saveFileDialog1.FileName);
-        }
-
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             
         }
 
+        
+        /// <summary>
+        /// Fired when "add files" button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void b_Add_Click(object sender, EventArgs e)
         {
             listBox1.SelectedIndexChanged -= listBox1_SelectedIndexChanged;
-            dontUpdate = true;
 
             openFileDialog1.Filter = "PDF files |*.pdf|All files|*.*";
             openFileDialog1.ShowDialog();
@@ -398,12 +454,7 @@ namespace Merge
 
             refreshList();
 
-            //           textBox1.ReadOnly = false;
-            //           textBox1.Text = list;
-            //           textBox1.ReadOnly = true;
-
             listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
-            dontUpdate = false;
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -411,12 +462,25 @@ namespace Merge
 
         }
 
+        
+        /// <summary>
+        /// Fired when "up" button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void b_Up_Click(object sender, EventArgs e)
         {
             swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFiles);
             swap(listBox1.SelectedIndex, listBox1.SelectedIndex - 1, inputFileObjects);
         }
 
+        
+        /// <summary>
+        /// Fired when "down" button pressed
+        /// The selected index of the listBox is changed in the event of the file being moved successfully
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void b_Down_Click(object sender, EventArgs e)
         {
             if (swap(listBox1.SelectedIndex, listBox1.SelectedIndex + 1, inputFiles))
@@ -426,14 +490,27 @@ namespace Merge
             }
         }
 
+        
+        /// <summary>
+        /// Fired when "delete" button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void b_Delete_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0)
             {
                 inputFiles.RemoveAt(listBox1.SelectedIndex);
+                inputFileObjects.RemoveAt(listBox1.SelectedIndex);
                 refreshList();
             }
         }
+
+        /// <summary>
+        /// Fired when "merge" button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void b_Merge_Click(object sender, EventArgs e)
         {
@@ -443,6 +520,11 @@ namespace Merge
             merge(saveFileDialog1.FileName);
         }
 
+        /// <summary>
+        /// Fired when "slice" button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void b_Slice_Click(object sender, EventArgs e)
         {
             saveFileDialog1.FileName = null;
@@ -468,6 +550,11 @@ namespace Merge
 
         }
 
+        /// <summary>
+        /// Get the default title name from the supplied target output file
+        /// </summary>
+        /// <param name="path">Path of output pdf</param>
+        /// <returns></returns>
         private string getTitle(string path)
         {
             int startIndex = 0;
